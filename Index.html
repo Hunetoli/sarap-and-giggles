@@ -1,0 +1,778 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Sarap & Giggles</title>
+<style>
+:root {
+  --bg:#fff8ef;
+  --card:#ffffff;
+  --ink:#38271f;
+  --muted:#806d60;
+  --brown:#75452e;
+  --orange:#df8644;
+  --cream:#f4e4d2;
+  --green:#34734d;
+  --red:#a83e35;
+  --border:#ead8c8;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--ink);
+  font-family:Arial,Helvetica,sans-serif;
+}
+header {
+  background:linear-gradient(135deg,#75452e,#a65e35);
+  color:white;
+  text-align:center;
+  padding:32px 16px 27px;
+}
+header h1 {
+  margin:0;
+  font-size:clamp(30px,7vw,46px);
+  letter-spacing:.5px;
+}
+header p { margin:9px 0 0; color:#ffead8; }
+main { max-width:850px; margin:22px auto; padding:0 14px 40px; }
+.card {
+  background:var(--card);
+  border:1px solid var(--border);
+  border-radius:16px;
+  padding:20px;
+  margin-bottom:17px;
+  box-shadow:0 4px 14px #56351a0d;
+}
+h2 { margin:0 0 14px; color:var(--brown); }
+h3 { color:var(--brown); }
+label { display:block; font-weight:700; margin:13px 0 6px; }
+input,textarea,select {
+  width:100%;
+  border:1px solid #d9c4b2;
+  border-radius:9px;
+  padding:12px;
+  font-size:16px;
+  background:white;
+  color:var(--ink);
+}
+textarea { min-height:82px; resize:vertical; }
+button {
+  border:0;
+  border-radius:10px;
+  padding:12px 17px;
+  font-size:15px;
+  font-weight:700;
+  cursor:pointer;
+  background:var(--brown);
+  color:white;
+}
+button:disabled { opacity:.5; cursor:not-allowed; }
+button.secondary { background:#ead8c8; color:var(--brown); }
+button.danger { background:var(--red); }
+button.green { background:var(--green); }
+button.small { padding:8px 11px; font-size:13px; }
+.menu-item {
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  padding:14px 0;
+  border-bottom:1px solid var(--border);
+}
+.menu-item:last-child { border-bottom:0; }
+.menu-name { font-weight:700; }
+.menu-description { color:var(--muted); font-size:13px; margin-top:4px; }
+.price { color:var(--brown); font-weight:700; margin-top:5px; }
+.quantity {
+  width:78px;
+  flex:0 0 78px;
+  text-align:center;
+}
+.total-line {
+  display:flex;
+  justify-content:space-between;
+  font-size:20px;
+  font-weight:700;
+  padding-top:15px;
+}
+.notice {
+  padding:14px;
+  background:#fff0dc;
+  border:1px solid #f0d3ad;
+  border-radius:10px;
+  line-height:1.5;
+}
+.hidden { display:none !important; }
+.success {
+  padding:13px;
+  border-radius:9px;
+  background:#e8f5e9;
+  color:#245b35;
+  margin-top:12px;
+}
+.error {
+  padding:13px;
+  border-radius:9px;
+  background:#ffeded;
+  color:#8c2929;
+  margin-top:12px;
+}
+.admin-top {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:10px;
+  flex-wrap:wrap;
+}
+.stats {
+  display:grid;
+  grid-template-columns:repeat(3,1fr);
+  gap:10px;
+  margin:15px 0;
+}
+.stat {
+  background:#fff5e9;
+  padding:13px 8px;
+  text-align:center;
+  border-radius:10px;
+}
+.stat strong { display:block; font-size:23px; color:var(--brown); }
+.stat span { color:var(--muted); font-size:12px; }
+.calendar-head {
+  display:flex;
+  justify-content:space-between;
+  align-items:center;
+  gap:8px;
+  margin:12px 0;
+}
+.calendar-grid {
+  display:grid;
+  grid-template-columns:repeat(7,1fr);
+  gap:5px;
+}
+.calendar-day {
+  min-height:62px;
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:6px 3px;
+  text-align:center;
+  background:white;
+  color:var(--ink);
+  font-size:13px;
+}
+.calendar-day.selected { outline:2px solid var(--orange); background:#fff0df; }
+.calendar-day.today { border-color:var(--orange); }
+.calendar-day .count { display:block; color:var(--green); font-weight:700; font-size:11px; margin-top:5px; }
+.weekday { text-align:center; color:var(--muted); font-size:12px; font-weight:700; padding:5px 0; }
+.order-card {
+  border:1px solid var(--border);
+  border-radius:12px;
+  padding:14px;
+  margin:12px 0;
+  background:#fffdfb;
+}
+.order-card h3 { margin:0 0 7px; }
+.order-meta { color:var(--muted); font-size:13px; line-height:1.6; }
+.order-items { margin:10px 0; padding-left:20px; }
+.order-actions {
+  display:flex;
+  gap:12px;
+  flex-wrap:wrap;
+  margin-top:12px;
+}
+.order-actions label {
+  display:flex;
+  align-items:center;
+  gap:6px;
+  margin:0;
+  font-size:14px;
+}
+.order-actions input { width:auto; }
+.status-pill {
+  display:inline-block;
+  background:#fff0d9;
+  color:#86511d;
+  border-radius:20px;
+  padding:4px 9px;
+  font-size:12px;
+  font-weight:700;
+}
+.status-open { color:var(--green); font-weight:700; }
+.status-closed { color:var(--red); font-weight:700; }
+footer { text-align:center; color:var(--muted); padding:10px 15px 30px; font-size:13px; }
+@media(max-width:500px) {
+  .card { padding:16px; }
+  .stats { grid-template-columns:repeat(3,1fr); }
+  .stat strong { font-size:19px; }
+  .calendar-day { min-height:54px; }
+}
+</style>
+</head>
+<body>
+
+<header>
+  <h1>Sarap & Giggles</h1>
+  <p>Homemade Filipino favorites, made with love!</p>
+</header>
+
+<main>
+  <section id="customerPage">
+    <div class="card">
+      <h2>Place an Order</h2>
+      <p>Choose your favorites and request a pickup date and time. Your order will be reviewed before it is confirmed.</p>
+
+      <div id="closedMessage" class="notice hidden">
+        <strong>Orders Temporarily Closed</strong><br>
+        We are not accepting new orders right now. Please check back later!
+      </div>
+
+      <form id="customerForm">
+        <label for="customerName">Your Name</label>
+        <input id="customerName" maxlength="60" required placeholder="Enter your name">
+
+        <h3>Our Menu</h3>
+        <div id="menu">
+          <div class="menu-item">
+            <div>
+              <div class="menu-name">Cooked Lumpia</div>
+              <div class="menu-description">25 pieces</div>
+              <div class="price">$35.00</div>
+            </div>
+            <input class="quantity" type="number" min="0" max="30" step="1" value="0" id="qty-cooked" aria-label="Cooked lumpia quantity">
+          </div>
+
+          <div class="menu-item">
+            <div>
+              <div class="menu-name">Frozen Lumpia</div>
+              <div class="menu-description">25 pieces</div>
+              <div class="price">$30.00</div>
+            </div>
+            <input class="quantity" type="number" min="0" max="30" step="1" value="0" id="qty-frozen" aria-label="Frozen lumpia quantity">
+          </div>
+
+          <div class="menu-item">
+            <div>
+              <div class="menu-name">Pancit</div>
+              <div class="menu-description">Good for 1–2 people</div>
+              <div class="price">$15.00</div>
+            </div>
+            <input class="quantity" type="number" min="0" max="30" step="1" value="0" id="qty-pancit" aria-label="Pancit quantity">
+          </div>
+
+          <div class="menu-item">
+            <div>
+              <div class="menu-name">Pancit Combo</div>
+              <div class="menu-description">Pancit with 3 pieces of lumpia</div>
+              <div class="price">$20.00</div>
+            </div>
+            <input class="quantity" type="number" min="0" max="30" step="1" value="0" id="qty-combo" aria-label="Pancit combo quantity">
+          </div>
+        </div>
+
+        <div class="total-line">
+          <span>Order Total</span>
+          <span id="orderTotal">$0.00</span>
+        </div>
+
+        <label for="orderDate">Requested Pickup Date</label>
+        <input id="orderDate" type="date" required>
+
+        <label for="orderTime">Requested Pickup Time</label>
+        <input id="orderTime" type="time" required>
+
+        <label for="orderNote">Additional Notes (Optional)</label>
+        <textarea id="orderNote" maxlength="300" placeholder="Anything we should know about your order?"></textarea>
+
+        <p class="notice">Submitting an order does not mean it is confirmed. We will review your request first.</p>
+        <button id="submitOrder" type="submit" style="width:100%;margin-top:14px">Submit Order</button>
+        <div id="customerMessage" aria-live="polite"></div>
+      </form>
+    </div>
+  </section>
+
+  <section class="card">
+    <button class="secondary" id="showAdminButton" type="button">Administrator Login</button>
+  </section>
+
+  <section id="adminPage" class="hidden">
+    <div class="card" id="loginPanel">
+      <h2>Administrator Login</h2>
+      <p>Sign in with your administrator email and password.</p>
+      <form id="loginForm">
+        <label for="adminEmail">Email</label>
+        <input id="adminEmail" type="email" autocomplete="username" required>
+        <label for="adminPassword">Password</label>
+        <input id="adminPassword" type="password" autocomplete="current-password" required>
+        <button type="submit" style="width:100%;margin-top:15px">Log In</button>
+        <div id="loginMessage" aria-live="polite"></div>
+      </form>
+    </div>
+
+    <div id="dashboard" class="hidden">
+      <div class="card">
+        <div class="admin-top">
+          <h2>Administrator Dashboard</h2>
+          <button class="secondary small" id="logoutButton" type="button">Log Out</button>
+        </div>
+        <p>New Orders: <strong id="orderStatusText" class="status-closed">CLOSED</strong></p>
+        <label style="display:flex;align-items:center;gap:10px">
+          <input id="acceptOrders" type="checkbox" style="width:auto">
+          Accept new customer orders
+        </label>
+        <p class="order-meta">Turn this off whenever you need to stop accepting new orders. The customer page updates automatically.</p>
+        <div id="settingsMessage" aria-live="polite"></div>
+
+        <div class="stats">
+          <div class="stat"><strong id="totalOrders">0</strong><span>Total Orders</span></div>
+          <div class="stat"><strong id="pendingOrders">0</strong><span>Not Picked Up</span></div>
+          <div class="stat"><strong id="completedSales">$0</strong><span>Picked Up Sales</span></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <h2>Order Calendar</h2>
+        <div class="calendar-head">
+          <button class="secondary small" id="prevMonth" type="button">‹ Previous</button>
+          <strong id="calendarMonth"></strong>
+          <button class="secondary small" id="nextMonth" type="button">Next ›</button>
+        </div>
+        <div class="calendar-grid" id="calendarGrid"></div>
+        <p class="order-meta">Numbers in green show how many orders are requested for that date. Tap a date to see its orders.</p>
+        <h3 id="selectedDateTitle">Orders for selected date</h3>
+        <div id="calendarOrders"></div>
+      </div>
+
+      <div class="card">
+        <h2>All Orders</h2>
+        <input id="orderSearch" type="search" placeholder="Search customer name or date">
+        <div id="allOrders"></div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer>Thank you for supporting Sarap & Giggles!</footer>
+
+<script type="module">
+import { initializeApp } from "https://www.gstatic.com/firebasejs/12.6.0/firebase-app.js";
+import {
+  getFirestore, collection, addDoc, doc, setDoc, getDoc,
+  onSnapshot, query, orderBy, updateDoc, serverTimestamp
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-firestore.js";
+import {
+  getAuth, signInWithEmailAndPassword, signOut, onAuthStateChanged
+} from "https://www.gstatic.com/firebasejs/12.6.0/firebase-auth.js";
+
+/* REPLACE THESE VALUES WITH YOUR FIREBASE WEB APP CONFIG */
+const firebaseConfig = {
+  apiKey: "YOUR_API_KEY",
+  authDomain: "YOUR_PROJECT.firebaseapp.com",
+  projectId: "YOUR_PROJECT",
+  storageBucket: "YOUR_PROJECT.firebasestorage.app",
+  messagingSenderId: "YOUR_SENDER_ID",
+  appId: "YOUR_APP_ID"
+};
+
+const app = initializeApp(firebaseConfig);
+const db = getFirestore(app);
+const auth = getAuth(app);
+
+const settingsRef = doc(db, "settings", "orderSettings");
+const ordersRef = collection(db, "orders");
+
+const $ = id => document.getElementById(id);
+
+const menuItems = [
+  { id:"cooked", name:"Cooked Lumpia (25 pcs)", price:35 },
+  { id:"frozen", name:"Frozen Lumpia (25 pcs)", price:30 },
+  { id:"pancit", name:"Pancit (good for 1–2)", price:15 },
+  { id:"combo", name:"Pancit Combo (with 3 lumpia)", price:20 }
+];
+
+let acceptingOrders = false;
+let settingsReady = false;
+let orders = [];
+let selectedDate = localDateString(new Date());
+let calendarMonth = new Date();
+let settingsUnsubscribe = null;
+let ordersUnsubscribe = null;
+
+function localDateString(date) {
+  const year = date.getFullYear();
+  const month = String(date.getMonth()+1).padStart(2,"0");
+  const day = String(date.getDate()).padStart(2,"0");
+  return `${year}-${month}-${day}`;
+}
+
+function money(value) {
+  return "$" + Number(value || 0).toFixed(2);
+}
+
+function showMessage(id, message, type) {
+  const el = $(id);
+  el.className = type || "";
+  el.textContent = message;
+}
+
+function updateCustomerAvailability(open) {
+  acceptingOrders = open;
+  $("customerForm").classList.toggle("hidden", !open);
+  $("closedMessage").classList.toggle("hidden", open);
+  $("submitOrder").disabled = !open;
+  $("acceptOrders").checked = open;
+  $("orderStatusText").textContent = open ? "OPEN" : "CLOSED";
+  $("orderStatusText").className = open ? "status-open" : "status-closed";
+
+  document.querySelectorAll("#menu input").forEach(input => {
+    input.disabled = !open;
+  });
+}
+
+function updateTotal() {
+  let total = 0;
+  menuItems.forEach(item => {
+    const quantity = Math.max(0, Math.min(30, Number($("qty-"+item.id).value) || 0));
+    total += quantity * item.price;
+  });
+  $("orderTotal").textContent = money(total);
+  return total;
+}
+
+menuItems.forEach(item => {
+  $("qty-"+item.id).addEventListener("input", updateTotal);
+});
+
+$("orderDate").min = localDateString(new Date());
+
+$("showAdminButton").addEventListener("click", () => {
+  $("adminPage").classList.toggle("hidden");
+  $("adminPage").scrollIntoView({behavior:"smooth"});
+});
+
+$("customerForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  if (!settingsReady || !acceptingOrders) {
+    showMessage("customerMessage", "Orders are currently closed. Please try again later.", "error");
+    return;
+  }
+
+  const customerName = $("customerName").value.trim();
+  const orderDate = $("orderDate").value;
+  const orderTime = $("orderTime").value;
+  const note = $("orderNote").value.trim();
+
+  const items = menuItems
+    .map(item => ({
+      id:item.id,
+      name:item.name,
+      quantity:Number($("qty-"+item.id).value) || 0,
+      price:item.price
+    }))
+    .filter(item => item.quantity > 0);
+
+  if (!customerName || !orderDate || !orderTime || items.length === 0) {
+    showMessage("customerMessage", "Please enter your name, pickup date and time, and at least one menu item.", "error");
+    return;
+  }
+
+  if (items.some(item => !Number.isInteger(item.quantity) || item.quantity < 1 || item.quantity > 30)) {
+    showMessage("customerMessage", "Please use quantities from 1 to 30 for each selected item.", "error");
+    return;
+  }
+
+  const total = items.reduce((sum,item) => sum + item.quantity * item.price, 0);
+  $("submitOrder").disabled = true;
+  showMessage("customerMessage", "Submitting your order...", "");
+
+  try {
+    await addDoc(ordersRef, {
+      customerName,
+      orderDate,
+      orderTime,
+      items,
+      subtotal:total,
+      total,
+      status:"review",
+      made:false,
+      pickedUp:false,
+      note,
+      createdAt:serverTimestamp()
+    });
+
+    $("customerForm").reset();
+    $("orderTotal").textContent = "$0.00";
+    $("orderDate").min = localDateString(new Date());
+    showMessage("customerMessage", "Your order was submitted! It is awaiting review and is not confirmed yet. Thank you!", "success");
+  } catch (error) {
+    console.error(error);
+    showMessage("customerMessage", "We couldn't submit your order. Please try again or contact us.", "error");
+  } finally {
+    $("submitOrder").disabled = !acceptingOrders;
+  }
+});
+
+$("loginForm").addEventListener("submit", async event => {
+  event.preventDefault();
+  showMessage("loginMessage", "Signing in...", "");
+  try {
+    await signInWithEmailAndPassword(auth, $("adminEmail").value.trim(), $("adminPassword").value);
+    $("adminPassword").value = "";
+    showMessage("loginMessage", "", "");
+  } catch (error) {
+    console.error(error);
+    showMessage("loginMessage", "Login failed. Check your email and password.", "error");
+  }
+});
+
+$("logoutButton").addEventListener("click", async () => {
+  await signOut(auth);
+});
+
+onAuthStateChanged(auth, async user => {
+  if (user) {
+    $("loginPanel").classList.add("hidden");
+    $("dashboard").classList.remove("hidden");
+    $("showAdminButton").classList.add("hidden");
+
+    try {
+      const settingsSnap = await getDoc(settingsRef);
+      if (!settingsSnap.exists()) {
+        await setDoc(settingsRef, { acceptingOrders:true });
+      }
+      startAdminOrdersListener();
+    } catch (error) {
+      console.error(error);
+      showMessage("settingsMessage", "Could not load administrator settings. Check your Firestore rules and admin UID.", "error");
+    }
+  } else {
+    $("loginPanel").classList.remove("hidden");
+    $("dashboard").classList.add("hidden");
+    $("showAdminButton").classList.remove("hidden");
+    if (ordersUnsubscribe) {
+      ordersUnsubscribe();
+      ordersUnsubscribe = null;
+    }
+    orders = [];
+  }
+});
+
+$("acceptOrders").addEventListener("change", async () => {
+  const desired = $("acceptOrders").checked;
+  $("acceptOrders").disabled = true;
+  try {
+    await setDoc(settingsRef, { acceptingOrders:desired }, { merge:true });
+    showMessage("settingsMessage", desired ? "New orders are now OPEN." : "New orders are now CLOSED.", "success");
+  } catch (error) {
+    console.error(error);
+    showMessage("settingsMessage", "Could not change order availability. Check your Firestore rules.", "error");
+    $("acceptOrders").checked = acceptingOrders;
+  } finally {
+    $("acceptOrders").disabled = false;
+  }
+});
+
+function startSettingsListener() {
+  if (settingsUnsubscribe) settingsUnsubscribe();
+  settingsUnsubscribe = onSnapshot(settingsRef, snapshot => {
+    settingsReady = snapshot.exists();
+    const open = settingsReady && snapshot.data().acceptingOrders === true;
+    updateCustomerAvailability(open);
+  }, error => {
+    console.error(error);
+    settingsReady = false;
+    updateCustomerAvailability(false);
+  });
+}
+
+function startAdminOrdersListener() {
+  if (ordersUnsubscribe) ordersUnsubscribe();
+  const q = query(ordersRef, orderBy("createdAt","desc"));
+  ordersUnsubscribe = onSnapshot(q, snapshot => {
+    orders = snapshot.docs.map(orderDoc => ({ id:orderDoc.id, ...orderDoc.data() }));
+    renderDashboard();
+  }, error => {
+    console.error(error);
+    $("allOrders").textContent = "Unable to load orders. Check your Firestore rules.";
+  });
+}
+
+function renderDashboard() {
+  $("totalOrders").textContent = orders.length;
+  $("pendingOrders").textContent = orders.filter(order => !order.pickedUp).length;
+  const sales = orders.filter(order => order.pickedUp).reduce((sum,order) => sum + Number(order.total || 0),0);
+  $("completedSales").textContent = money(sales);
+  renderCalendar();
+  renderCalendarOrders();
+  renderAllOrders();
+}
+
+function renderCalendar() {
+  const grid = $("calendarGrid");
+  grid.innerHTML = "";
+  ["Sun","Mon","Tue","Wed","Thu","Fri","Sat"].forEach(day => {
+    const el = document.createElement("div");
+    el.className = "weekday";
+    el.textContent = day;
+    grid.appendChild(el);
+  });
+
+  const year = calendarMonth.getFullYear();
+  const month = calendarMonth.getMonth();
+  $("calendarMonth").textContent = calendarMonth.toLocaleDateString(undefined,{month:"long",year:"numeric"});
+
+  const firstDay = new Date(year,month,1).getDay();
+  const daysInMonth = new Date(year,month+1,0).getDate();
+
+  for (let i=0;i<firstDay;i++) {
+    const blank = document.createElement("div");
+    grid.appendChild(blank);
+  }
+
+  for (let day=1;day<=daysInMonth;day++) {
+    const date = localDateString(new Date(year,month,day));
+    const count = orders.filter(order => order.orderDate === date).length;
+    const el = document.createElement("button");
+    el.type = "button";
+    el.className = "calendar-day";
+    if (date === selectedDate) el.classList.add("selected");
+    if (date === localDateString(new Date())) el.classList.add("today");
+    el.innerHTML = `<span>${day}</span>${count ? `<span class="count">${count} order${count===1?"":"s"}</span>` : ""}`;
+    el.addEventListener("click", () => {
+      selectedDate = date;
+      renderCalendar();
+      renderCalendarOrders();
+    });
+    grid.appendChild(el);
+  }
+}
+
+$("prevMonth").addEventListener("click", () => {
+  calendarMonth = new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()-1,1);
+  renderCalendar();
+});
+$("nextMonth").addEventListener("click", () => {
+  calendarMonth = new Date(calendarMonth.getFullYear(),calendarMonth.getMonth()+1,1);
+  renderCalendar();
+});
+
+function orderCard(order) {
+  const card = document.createElement("div");
+  card.className = "order-card";
+
+  const title = document.createElement("h3");
+  title.textContent = order.customerName || "Customer";
+  card.appendChild(title);
+
+  const meta = document.createElement("div");
+  meta.className = "order-meta";
+  meta.textContent = `Pickup requested: ${order.orderDate || "No date"} at ${order.orderTime || "No time"}`;
+  card.appendChild(meta);
+
+  const status = document.createElement("p");
+  status.innerHTML = `<span class="status-pill">${order.status === "accepted" ? "Accepted" : "Awaiting Review"}</span>`;
+  card.appendChild(status);
+
+  const list = document.createElement("ul");
+  list.className = "order-items";
+  (order.items || []).forEach(item => {
+    const li = document.createElement("li");
+    li.textContent = `${item.quantity} × ${item.name} — ${money(item.quantity * item.price)}`;
+    list.appendChild(li);
+  });
+  card.appendChild(list);
+
+  const total = document.createElement("strong");
+  total.textContent = "Total: " + money(order.total);
+  card.appendChild(total);
+
+  if (order.note) {
+    const note = document.createElement("p");
+    note.className = "order-meta";
+    note.textContent = "Customer notes: " + order.note;
+    card.appendChild(note);
+  }
+
+  const statusLabel = document.createElement("label");
+  statusLabel.textContent = "Order review status";
+  const statusSelect = document.createElement("select");
+  statusSelect.innerHTML = '<option value="review">Awaiting Review</option><option value="accepted">Accepted</option>';
+  statusSelect.value = order.status || "review";
+  statusLabel.appendChild(statusSelect);
+  card.appendChild(statusLabel);
+
+  const actions = document.createElement("div");
+  actions.className = "order-actions";
+
+  const madeLabel = document.createElement("label");
+  const madeCheck = document.createElement("input");
+  madeCheck.type = "checkbox";
+  madeCheck.checked = order.made === true;
+  madeLabel.append(madeCheck, document.createTextNode(" Made"));
+
+  const pickedLabel = document.createElement("label");
+  const pickedCheck = document.createElement("input");
+  pickedCheck.type = "checkbox";
+  pickedCheck.checked = order.pickedUp === true;
+  pickedLabel.append(pickedCheck, document.createTextNode(" Picked Up"));
+
+  const save = document.createElement("button");
+  save.type = "button";
+  save.className = "green small";
+  save.textContent = "Save Changes";
+  save.addEventListener("click", async () => {
+    save.disabled = true;
+    try {
+      await updateDoc(doc(db,"orders",order.id), {
+        status:statusSelect.value,
+        made:madeCheck.checked,
+        pickedUp:pickedCheck.checked
+      });
+      save.textContent = "Saved";
+    } catch (error) {
+      console.error(error);
+      alert("Could not save this order. Check your connection and permissions.");
+      save.disabled = false;
+    }
+  });
+
+  actions.append(madeLabel,pickedLabel,save);
+  card.appendChild(actions);
+  return card;
+}
+
+function renderCalendarOrders() {
+  $("selectedDateTitle").textContent = "Orders for " + selectedDate;
+  const target = $("calendarOrders");
+  target.innerHTML = "";
+  const matches = orders.filter(order => order.orderDate === selectedDate);
+  if (!matches.length) {
+    target.textContent = "No orders for this date.";
+    return;
+  }
+  matches.forEach(order => target.appendChild(orderCard(order)));
+}
+
+function renderAllOrders() {
+  const target = $("allOrders");
+  target.innerHTML = "";
+  const search = $("orderSearch").value.trim().toLowerCase();
+  const matches = orders.filter(order =>
+    (order.customerName || "").toLowerCase().includes(search) ||
+    (order.orderDate || "").toLowerCase().includes(search)
+  );
+  if (!matches.length) {
+    target.textContent = "No matching orders.";
+    return;
+  }
+  matches.forEach(order => target.appendChild(orderCard(order)));
+}
+
+$("orderSearch").addEventListener("input", renderAllOrders);
+
+startSettingsListener();
+</script>
+</body>
+</html>
